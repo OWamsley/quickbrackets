@@ -10,11 +10,33 @@ export class Cell extends Component {
     
     
     render() {
+        const style={
+            flex:1,
+            alignSelf: "center",
+            padding:10,
+           
+        }
+        var left;
+        var right;
+        try {
+            left= this.props.leftCell.no;
+        } catch (error) {
+            
+        }
+        try {
+            right= this.props.rightCell.no;
+        } catch (error) {
+            
+        }
+
         return (
-            <div>-----------------------------
+            <div style={style}>
+                <div>no= {this.props.no}</div>
                 <div>left= {this.props.left}</div>
                 <div>right= {this.props.right}</div>
-                <div>no= {this.props.no}</div>
+                
+                <div>leftChild= {left}</div>
+                <div>rightChild= {right}</div>
             </div>
         )
     }

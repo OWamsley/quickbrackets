@@ -1,29 +1,67 @@
 import React from 'react';
 import Cell from '../Components/Cell/index'
 
-class Bracket extends React.Component{
-    constructor(props){
+class Bracket extends React.Component {
+    constructor(props) {
         super(props);
-        this.state={
-            cells : []
+        this.state = {
+            cells: []
         }
     }
-    render(){
-        var renderCells = [];
+    render() {
+        var newRow;
+        var renderCellsByRow = [];
+        // [0] will be head cell with 1 item, etc
         var localCells = this.state.cells;
-        for(let cell of localCells){
-            renderCells.push(<Cell left={cell.left} right={cell.right} no={cell.no}/>)
+        var curRow = 0;
+        var cellCount = 0;
+        for(let i = 0; i < this.props.partyCount; i++){
+            renderCellsByRow.push([]);
         }
-        console.log(typeof(this.state.cells))
+        for (let cell of localCells) {
+            if(cellCount < 1){
+                renderCellsByRow[0].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            }
+            else if(cellCount <= 2){
+                renderCellsByRow[1].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            }
+            else if(cellCount <= 6){
+                renderCellsByRow[2].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            }
+            else if(cellCount <=14){
+                renderCellsByRow[3].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            }
+            
+            cellCount++;
+            
+        }
 
-        return(
-            <>
-            Bracket Page
-            {renderCells}    
-            </>
+        const bracketStyle = {
+            display: "flex",
+            flexDirection: "row",
+            
+        }
+        const bracketStyle2 = {
+            display: "flex",
+            flexDirection: "column",
+            padding: 50,
+            justifyContent: "space-between",
+            alignItems: "center",
+        }
+
+        return (
+            <div style={bracketStyle}>
+                Bracket Page
+                <div style={bracketStyle2}>{renderCellsByRow[4]}</div>
+                <div style={bracketStyle2}>{renderCellsByRow[3]}</div>
+                <div style={bracketStyle2}>{renderCellsByRow[2]}</div>
+                <div style={bracketStyle2}>{renderCellsByRow[1]}</div>
+                <div style={bracketStyle2}>{renderCellsByRow[0]}</div>
+
+            </div>
         );
     }
-    componentDidMount(){
+    componentDidMount() {
         //this method must generate the bracket tree and set state to reflect the tree. 
         let foundColumn = false;
         let power = 2;
@@ -31,8 +69,8 @@ class Bracket extends React.Component{
         let cellsRequired = this.props.partyCount - 1;
         let cells = [];
         //columns reflect columns needed to store cells, and the winner.(4 parties require 3 columns)
-        while(!foundColumn){
-            if((2**power) >= this.props.partyCount){
+        while (!foundColumn) {
+            if ((2 ** power) >= this.props.partyCount) {
                 columns = power + 1;
                 foundColumn = true;
             }
@@ -42,37 +80,37 @@ class Bracket extends React.Component{
         var depth = 0;
         //currently all depth == 0
         cells.push(new CellObj(0, depth));
-        
-        for(let x=0; x< cellsRequired -1; x++){
-            for(var searchCell of cells){
-                if (searchCell.leftCell == undefined){
-                    newCell = new CellObj(x+1, depth, searchCell);
+
+        for (let x = 0; x < cellsRequired - 1; x++) {
+            for (var searchCell of cells) {
+                if (searchCell.leftCell == undefined) {
+                    newCell = new CellObj(x + 1, depth, searchCell);
                     searchCell.leftCell = newCell;
                     cells.push(newCell);
                     break;
                 }
-                else if(searchCell.rightCell ==undefined){
-                    newCell = new CellObj(x+1,depth,searchCell);
+                else if (searchCell.rightCell == undefined) {
+                    newCell = new CellObj(x + 1, depth, searchCell);
                     searchCell.rightCell = newCell;
                     cells.push(newCell);
                     break;
                 }
-                
+
             }
         }
         var curParty = 0;
-        for(let cell of cells){
-            if(cell.leftCell == undefined){
+        for (let cell of cells) {
+            if (cell.leftCell == undefined) {
                 cell.left = this.props.parties[curParty];
                 curParty++;
             }
-            if(cell.rightCell == undefined){
+            if (cell.rightCell == undefined) {
                 cell.right = this.props.parties[curParty];
                 curParty++;
             }
         }
 
-        for(let cell of cells){
+        for (let cell of cells) {
             console.log(cell);
         }
 
@@ -83,15 +121,15 @@ class Bracket extends React.Component{
     }
 }
 
-class CellObj{
+class CellObj {
     depth;
-    no;
+    no = -1;
     left;
     right;
     leftCell = null;
     rightCell = null;
     parentCell;
-    constructor(no, depth,parentCell, leftCell, rightCell, left, right,){
+    constructor(no, depth, parentCell, leftCell = null, rightCell = null, left, right,) {
         this.no = no;
         this.depth = depth;
         this.left = left;
@@ -99,6 +137,13 @@ class CellObj{
         this.leftCell = leftCell;
         this.rightCell = rightCell;
         this.parentCell = parentCell;
+    }
+
+    getLeftCell(){
+        return this.leftCell;
+    }
+    getRightCell(){
+        return this.rightCell;
     }
 }
 

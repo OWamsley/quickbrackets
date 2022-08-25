@@ -5,7 +5,7 @@ import Bracket from './Pages/bracket';
 function App() {
   return (
     <div className="App">
-      <HomePage />
+      <Bracket partyCount={16} parties={["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]} />
     </div>
   );
 }
