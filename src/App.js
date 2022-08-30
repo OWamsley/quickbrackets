@@ -5,10 +5,9 @@ import Bracket from './Pages/bracket';
 function App() {
   return (
     <div className="App">
-      <Bracket partyCount={16} parties={["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p"]} />
+      <Bracket partyCount={7} parties={["albert","ben","charlie","dane","emma","frank","gerald","hannah","isabelle","jules","kat","leah","mom","noah","owen","penny"]} />
     </div>
   );
 }
 
 export default App;
-//<Bracket partyCount={9} parties={["a","b","c","d","e","f","g","h","i"]} />

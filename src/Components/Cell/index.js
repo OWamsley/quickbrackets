@@ -26,17 +26,19 @@ export class Cell extends Component {
         try {
             right= this.props.rightCell.no;
         } catch (error) {
-            
+        
         }
-
+        if(this.props.left!= null && this.props.right!= null){
+            var clickable = true;
+        }
+        else{
+            var clickable = false;
+        }
         return (
             <div style={style}>
-                <div>no= {this.props.no}</div>
-                <div>left= {this.props.left}</div>
-                <div>right= {this.props.right}</div>
+                <div><button disabled={!clickable} onClick={() => this.props.updateCell( this.props.left, this.props.parentNo, this.props.no)}>{this.props.left}</button> </div>
+                <div><button disabled={!clickable} onClick={() => this.props.updateCell( this.props.right, this.props.parentNo, this.props.no)}>{this.props.right}</button> </div>
                 
-                <div>leftChild= {left}</div>
-                <div>rightChild= {right}</div>
             </div>
         )
     }

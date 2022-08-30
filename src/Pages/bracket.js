@@ -5,41 +5,48 @@ class Bracket extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cells: []
+            cells: [],
+            winner: ""
         }
+        this.updateCell = this.updateCell.bind(this);
+        this.setWinner = this.setWinner.bind(this);
     }
+
+
+
     render() {
-        var newRow;
+
         var renderCellsByRow = [];
         // [0] will be head cell with 1 item, etc
         var localCells = this.state.cells;
-        var curRow = 0;
         var cellCount = 0;
-        for(let i = 0; i < this.props.partyCount; i++){
+        for (let i = 0; i < this.props.partyCount; i++) {
             renderCellsByRow.push([]);
         }
         for (let cell of localCells) {
-            if(cellCount < 1){
-                renderCellsByRow[0].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            if (cellCount < 1) {
+                renderCellsByRow[0].push(<Cell parentNo={-1} updateCell={this.setWinner} leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
             }
-            else if(cellCount <= 2){
-                renderCellsByRow[1].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            else if (cellCount <= 2) {
+                renderCellsByRow[1].push(<Cell parentNo={cell.parentCell.no} updateCell={this.updateCell} leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
             }
-            else if(cellCount <= 6){
-                renderCellsByRow[2].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            else if (cellCount <= 6) {
+                renderCellsByRow[2].push(<Cell parentNo={cell.parentCell.no} updateCell={this.updateCell} leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
             }
-            else if(cellCount <=14){
-                renderCellsByRow[3].push(<Cell leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
+            else if (cellCount <= 14) {
+                renderCellsByRow[3].push(<Cell parentNo={cell.parentCell.no} updateCell={this.updateCell} leftCell={cell.leftCell} rightCell={cell.rightCell} no={cell.no} left={cell.left} right={cell.right} />)
             }
-            
+
             cellCount++;
-            
+
         }
+
+
 
         const bracketStyle = {
             display: "flex",
             flexDirection: "row",
-            
+
         }
         const bracketStyle2 = {
             display: "flex",
@@ -52,15 +59,22 @@ class Bracket extends React.Component {
         return (
             <div style={bracketStyle}>
                 Bracket Page
+                <div><button onClick={() => this.updateCell(3, 7, "testname")}>-</button> </div>
                 <div style={bracketStyle2}>{renderCellsByRow[4]}</div>
                 <div style={bracketStyle2}>{renderCellsByRow[3]}</div>
                 <div style={bracketStyle2}>{renderCellsByRow[2]}</div>
                 <div style={bracketStyle2}>{renderCellsByRow[1]}</div>
                 <div style={bracketStyle2}>{renderCellsByRow[0]}</div>
+                <div style={bracketStyle2}><h1>{this.state.winner}</h1></div>
 
             </div>
         );
     }
+
+    setWinner(name){
+        this.setState({winner: name});
+    }
+
     componentDidMount() {
         //this method must generate the bracket tree and set state to reflect the tree. 
         let foundColumn = false;
@@ -119,6 +133,30 @@ class Bracket extends React.Component {
             cells: cells
         });
     }
+    updateCell(Name, cellNo, prevCellNo) {
+        let updateCells = this.state.cells;
+        var curCell = updateCells[cellNo];
+        try {
+            if (curCell.leftCell == null) {
+                return;
+            }
+            if (curCell.leftCell.no == prevCellNo) {
+                curCell.left = Name;
+            }
+
+            else {
+                curCell.right = Name;
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+
+        updateCells[cellNo] = curCell;
+        this.setState({
+            cells: updateCells
+        })
+    }
 }
 
 class CellObj {
@@ -139,10 +177,10 @@ class CellObj {
         this.parentCell = parentCell;
     }
 
-    getLeftCell(){
+    getLeftCell() {
         return this.leftCell;
     }
-    getRightCell(){
+    getRightCell() {
         return this.rightCell;
     }
 }
