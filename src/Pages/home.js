@@ -23,10 +23,7 @@ class HomePage extends React.Component{
         return(
         <>
             <Header/>
-            <div>
-            current parties: 
-            {parties}
-            </div>
+            
             <Counter partyCount={this.state.partyCount} decreaseCount={this.decPartyCount} increaseCount={this.incPartyCount} />
             <PartyEntry updateParties={this.updateParties} partyCount={this.state.partyCount} updateParty={this.state.updateParty} />
         </>)
@@ -43,12 +40,19 @@ class HomePage extends React.Component{
         this.setState({
             parties: updateparties
         });
+        
     }
 
     updateParties(updateParties){
         this.setState(
             {parties: updateParties}
         );
+        let partynames = [];
+        for(let party of updateParties){
+            partynames.push(party.Name);
+
+        }
+        this.props.setParties(partynames);
     }
 
     incPartyCount(){
