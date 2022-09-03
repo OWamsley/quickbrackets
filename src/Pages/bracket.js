@@ -58,8 +58,6 @@ class Bracket extends React.Component {
 
         return (
             <div style={bracketStyle}>
-                Bracket Page
-                <div><button onClick={() => this.updateCell(3, 7, "testname")}>-</button> </div>
                 <div style={bracketStyle2}>{renderCellsByRow[4]}</div>
                 <div style={bracketStyle2}>{renderCellsByRow[3]}</div>
                 <div style={bracketStyle2}>{renderCellsByRow[2]}</div>
